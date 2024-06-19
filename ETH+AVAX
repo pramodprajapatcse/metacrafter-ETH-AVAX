@@ -1,32 +1,68 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.18;
+pragma solidity ^0.8.0;
 
-import "hardhat/console.sol";
+contract FundraisingCampaign {
+    address payable public sponsor;
+    uint public target;
+    uint public totalRaised;
+    mapping(address => uint) public backers;
+    bool public targetReached;
+    bool public campaignEnded;
 
-contract errorHandler{
-    uint public PersonAge;
-
-    function setAge(uint _age) public {
-        PersonAge=_age;
+    // Constructor to initialize sponsor and target
+    constructor(address payable _sponsor, uint _target) {
+        sponsor = _sponsor;
+        target = _target;
     }
 
-    function testAssert() public view{
-        assert(PersonAge>=21);
-        console.log("You are eligible to access this service.");
+    // Function to contribute to the fundraising campaign
+    function contribute() public payable {
+        require(!campaignEnded, "Campaign is ended.");
+        require(msg.value > 10, "Contribution must be greater than 10 wei.");
 
-    }
-    function testRequire() public view{
-        require(PersonAge>=21, "Access restricted to adults only");
-        console.log("You are eligible to access this service.");
-        
-    }
-    function testRevert() public view{
-        if(PersonAge>=21){
-            console.log("You are eligible to access this service.");
+        backers[msg.sender] += msg.value;
+        totalRaised += msg.value;
+
+        if (totalRaised >= target) {
+            targetReached = true;
         }
-        else{
-            revert("Access restricted to adults only");
+    }
+
+    // Function to check if the target has been reached and transfer funds to the sponsor
+    function checkGoalReached() public {
+        if (!campaignEnded) {
+            revert("Campaign is not ended yet.");
         }
-        
+        if (!targetReached) {
+            revert("Target not reached.");
+        }
+
+        // This assert should never fail if the logic is correct
+        assert(totalRaised >= target);
+
+        sponsor.transfer(totalRaised);
+    }
+
+    // Function to close the fundraising campaign
+    function closeCampaign() public {
+        require(!campaignEnded, "Campaign is already closed.");
+        campaignEnded = true;
+
+        if (totalRaised >= target) {
+            targetReached = true;
+        }
+    }
+
+    // Function to refund contributions if the target is not reached
+    function refund() public {
+        require(campaignEnded, "Campaign is not ended.");
+        require(!targetReached, "Target reached, no refunds available.");
+
+        uint amount = backers[msg.sender];
+        require(amount > 10, "No contributions to refund.");
+
+        // Reset the contribution to zero before transferring the refund
+        backers[msg.sender] = 0;
+        payable(msg.sender).transfer(amount);
     }
 }
