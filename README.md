@@ -1,119 +1,38 @@
 
-# Error Handler Smart Contract
+# Fundraising Campaign Smart Contract
 
-This project demonstrates the use of error handling in Solidity using assert, require, and revert statements.
+This project implements a Solidity smart contract for conducting fundraising campaigns on the Ethereum blockchain.
 
 ## Description
 
-The `errorHandler` smart contract allows you to set an age and then check if the age is at least 21. It includes three different functions (`testAssert`, `testRequire`, and `testRevert`) to demonstrate various error handling mechanisms in Solidity. Additionally, it uses `console.log` for debugging purposes with Hardhat.
+The FundraisingCampaign contract allows an organizer (sponsor) to set a fundraising target in wei and collect contributions from backers. If the fundraising target is met, the funds are transferred to the sponsor; otherwise, backers can claim a refund.
 
 ## Getting Started
 
 ### Installing
 
-* Clone the repository:
-  ```bash
-  git clone https://github.com/yourusername/error-handler.git
-  ```
-* Navigate to the project directory:
-  ```bash
-  cd error-handler
-  ```
-* Install the necessary dependencies:
-  ```bash
-  npm install
-  ```
+Clone this repository to your local machine:
+
+```bash
+git clone https://github.com/your_username/your_repository.git
+```
 
 ### Executing program
 
-* Compile the smart contract:
-  ```bash
-  npx hardhat compile
-  ```
-* Deploy the smart contract:
-  ```bash
-  npx hardhat run scripts/deploy.js --network <network-name>
-  ```
-* Interact with the smart contract using Hardhat Console:
-  ```bash
-  npx hardhat console --network <network-name>
-  ```
-* Example commands in the Hardhat console:
-  ```javascript
-  const ErrorHandler = await ethers.getContractFactory("errorHandler");
-  const errorHandler = await ErrorHandler.deploy();
-  await errorHandler.deployed();
+To deploy and interact with the smart contract, you can use tools like Remix IDE or Truffle Suite. Here are the basic steps:
 
-  // Set age
-  await errorHandler.setAge(25);
-
-  // Test assert
-  await errorHandler.testAssert();
-
-  // Test require
-  await errorHandler.testRequire();
-
-  // Test revert
-  await errorHandler.testRevert();
-  ```
-
-## Smart Contract Code
-
-```solidity
-// SPDX-License-Identifier: MIT
-pragma solidity 0.8.18;
-
-// Import Hardhat console for debugging
-import "hardhat/console.sol";
-
-// Define the contract
-contract errorHandler {
-    // Declare a public state variable of type uint to store the person's age
-    uint public PersonAge;
-
-    // Function to set the age, taking a uint as an argument
-    function setAge(uint _age) public {
-        PersonAge = _age;
-    }
-
-    // Function using assert to check if PersonAge is at least 21
-    function testAssert() public view {
-        assert(PersonAge >= 21);
-        console.log("You are eligible to access this service.");
-    }
-
-    // Function using require to check if PersonAge is at least 21
-    function testRequire() public view {
-        require(PersonAge >= 21, "Access restricted to adults only");
-        console.log("You are eligible to access this service.");
-    }
-
-    // Function using if-else and revert to check if PersonAge is at least 21
-    function testRevert() public view {
-        if (PersonAge >= 21) {
-            console.log("You are eligible to access this service.");
-        } else {
-            revert("Access restricted to adults only");
-        }
-    }
-}
-```
+1. Compile the contract.
+2. Deploy the contract to a local or test network.
+3. Interact with the deployed contract using the provided functions.
 
 ## Help
 
-For common problems or issues, ensure you have the correct version of Solidity and Hardhat installed. If issues persist, try the following command for more information:
-```bash
-npx hardhat help
-```
+If you encounter issues or have questions about this smart contract, please contact prajapatpramod474@gmail.com
 
 ## Authors
 
-Contributors names and contact info:
-
 - Pramod Prajapat
-- instagram pramodprajapatcse
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE.md file for details.
-```
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
